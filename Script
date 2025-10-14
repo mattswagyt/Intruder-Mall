@@ -1,0 +1,545 @@
+-- The Intruder - Mall
+-- Script by BMF
+
+local player = game:GetService("Players").LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+-- Remove any previous UI instances
+if playerGui:FindFirstChild("MallUI") then
+    playerGui.MallUI:Destroy()
+end
+
+-- Create ScreenGui stuff
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "MallUI"
+screenGui.Parent = playerGui
+
+-- Create the main frame stuff
+local mainFrame = Instance.new("Frame")
+mainFrame.Size = UDim2.new(0, 550, 0, 900)
+mainFrame.Position = UDim2.new(0.5, -275, 0.5, -400) -- Centered on the screen
+mainFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+mainFrame.BorderSizePixel = 2
+mainFrame.BorderColor3 = Color3.fromRGB(255, 0, 0)
+mainFrame.Active = true
+mainFrame.Draggable = true
+mainFrame.Parent = screenGui
+
+-- Title label stuff
+local titleLabel = Instance.new("TextLabel")
+titleLabel.Size = UDim2.new(1, 0, 0, 60)
+titleLabel.Position = UDim2.new(0, 0, 0, 0)
+titleLabel.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+titleLabel.Font = Enum.Font.SourceSansBold
+titleLabel.TextSize = 28
+titleLabel.Text = "The Intruder - Mall (By BMF)"
+titleLabel.Parent = mainFrame
+
+-- Location label stuff
+local locationLabel = Instance.new("TextLabel")
+locationLabel.Size = UDim2.new(1, 0, 0, 40)
+locationLabel.Position = UDim2.new(0, 0, 0, 70) -- Adjusted position
+locationLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+locationLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+locationLabel.Font = Enum.Font.SourceSansBold
+locationLabel.TextSize = 22
+locationLabel.Text = "Location: Unknown"
+locationLabel.Parent = mainFrame
+
+-- Error log label stuff
+local errorLabel = Instance.new("TextLabel")
+errorLabel.Size = UDim2.new(1, 0, 0, 40)
+errorLabel.Position = UDim2.new(0, 0, 0, 120) -- Adjusted position for spacing
+errorLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+errorLabel.TextColor3 = Color3.fromRGB(255, 0, 0)
+errorLabel.Font = Enum.Font.SourceSansBold
+errorLabel.TextSize = 22
+errorLabel.Text = "Error Log: None"
+errorLabel.Parent = mainFrame
+
+-- Stuff to create buttons
+local function createButton(name, position, parent, callback)
+    local button = Instance.new("TextButton")
+    button.Size = UDim2.new(0.8, 0, 0, 30) -- Adjusted size for better fit
+    button.Position = position
+    button.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    button.BorderColor3 = Color3.fromRGB(255, 0, 0)
+    button.TextColor3 = Color3.fromRGB(255, 255, 255)
+    button.Font = Enum.Font.SourceSansBold
+    button.TextSize = 18 -- Reduced text size for smaller buttons
+    button.Text = name
+    button.Parent = parent
+    if callback then
+        button.MouseButton1Click:Connect(callback)
+    end
+    return button
+end
+
+-- Jit for each button
+task.spawn(function()
+    local buttonFunctions = {
+        ["Other Script (Not mine!)"] = function()
+            loadstring(game:HttpGet("https://pastebin.com/raw/FGjjwm6W"))()
+        end,
+        ["Intruder Ignores You"] = function()
+            -- Set the canExecute property to false to make the intruder ignore the player
+            local deathGui = game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Death")
+            if deathGui then
+                local canExecute = deathGui:FindFirstChild("canExecute")
+                if canExecute then
+                    canExecute.Value = false
+                    print("Intruder will now ignore you.")
+                else
+                    print("Error: canExecute property not found.")
+                end
+            else
+                print("Error: Death GUI not found.")
+            end
+            
+            -- Destroy FindPlayer paths to ensure the intruder ignores the player
+            local events = workspace:FindFirstChild("Events")
+            if events then
+                local findPlayerPaths = {
+                    "FindPlayer", 
+                    "FindPlayer2", 
+                    "FindPlayer3"
+                }
+                for _, path in ipairs(findPlayerPaths) do
+                    local obj = events:FindFirstChild(path)
+                    if obj and obj:FindFirstChild("TouchInterest") then
+                        obj.TouchInterest:Destroy()
+                        print(path .. " TouchInterest destroyed.")
+                    end
+                end
+            end
+        end,
+        ["God Mode"] = function()
+            -- Destroy these paths to enable God Mode
+            local replicatedStorage = game:GetService("ReplicatedStorage")
+            local pathsToDestroy = {
+                "activateDeath", 
+                "Die", 
+                "playerDeath"
+            }
+            for _, path in ipairs(pathsToDestroy) do
+                local obj = replicatedStorage:FindFirstChild(path)
+                if obj then
+                    obj:Destroy()
+                    print(path .. " destroyed.")
+                else
+                    print("Error: " .. path .. " not found.")
+                end
+            end
+        end,
+        ["Win Game"] = function()
+            local winGame = workspace:FindFirstChild("Values"):FindFirstChild("winGame")
+            if winGame then
+                winGame.Value = true
+                print("Game won.")
+            else
+                print("Error: winGame value not found.")
+            end
+        end,
+        ["Break Anxiety"] = function()
+            -- Keep setting the Anxiety value to -696969696969 24/7
+            local anxiety = workspace:FindFirstChild("Events"):FindFirstChild("Anxiety")
+            if anxiety then
+                while true do
+                    anxiety.Value = -696969696969
+                    wait(1) -- Update every second
+                end
+            else
+                print("Error: Anxiety value not found.")
+            end
+        end,
+        ["Break Awareness"] = function()
+    -- Destroy the IntruderAwareness value
+    local awareness = workspace:FindFirstChild("Events"):FindFirstChild("IntruderAwareness")
+    if awareness then
+        awareness:Destroy()
+        print("Intruder Awareness destroyed. Awareness is no longer a worry.")
+    else
+        print("Error: IntruderAwareness value not found.")
+    end
+end,
+        ["Break Time"] = function()
+    -- Lock TimeValue to -9223372036854776000
+    local values = workspace:FindFirstChild("Values")
+    if values then
+        local timeValue = values:FindFirstChild("TimeValue")
+        if timeValue then
+            task.spawn(function()
+                while true do
+                    if timeValue.Value ~= -9223372036854776000 then
+                        timeValue.Value = -9223372036854776000
+                    end
+                    wait() -- Short delay to prevent excessive processing
+                end
+            end)
+            print("Time mechanic disabled. TimeValue locked to -9223372036854776000.")
+        else
+            print("Error: TimeValue not found.")
+        end
+    else
+        print("Error: workspace.Values not found.")
+    end
+
+    -- Destroying game:GetService("ReplicatedStorage").timer
+    local replicatedStorage = game:GetService("ReplicatedStorage")
+    if replicatedStorage:FindFirstChild("timer") then
+        replicatedStorage.timer:Destroy()
+        print("Destroyed: ReplicatedStorage.timer")
+    else
+        print("Error: ReplicatedStorage.timer not found.")
+    end
+end,
+      ["Break Alarm"] = function()
+    -- Function to disable the alarm mechanic
+    print("Alarm mechanic disabled.")
+    
+    -- Destroying paths in workspace.Values
+    local values = workspace:FindFirstChild("Values")
+    if values then
+        if values:FindFirstChild("alarmOn") then
+            values.alarmOn:Destroy()
+            print("Destroyed: workspace.Values.alarmOn")
+        else
+            print("Error: workspace.Values.alarmOn not found.")
+        end
+
+        if values:FindFirstChild("alarmsLeft") then
+            values.alarmsLeft:Destroy()
+            print("Destroyed: workspace.Values.alarmsLeft")
+        else
+            print("Error: workspace.Values.alarmsLeft not found.")
+        end
+    else
+        print("Error: workspace.Values not found.")
+    end
+
+    -- Destroying workspace.Deactivators
+    if workspace:FindFirstChild("Deactivators") then
+        workspace.Deactivators:Destroy()
+        print("Destroyed: workspace.Deactivators")
+    else
+        print("Error: workspace.Deactivators not found.")
+    end
+
+    -- Destroying both Alarm models in workspace.Map
+    local map = workspace:FindFirstChild("Map")
+    if map then
+        local alarmsDestroyed = 0
+        for _, child in pairs(map:GetChildren()) do
+            if child.Name == "Alarm" then
+                child:Destroy()
+                alarmsDestroyed += 1
+                print("Destroyed: workspace.Map.Alarm")
+            end
+        end
+        if alarmsDestroyed == 0 then
+            print("Error: No Alarm models found in workspace.Map.")
+        else
+            print("Total Alarm models destroyed in workspace.Map:", alarmsDestroyed)
+        end
+    else
+        print("Error: workspace.Map not found.")
+    end
+
+    -- Destroying every sound named "Alarm" in workspace.Sounds
+    local sounds = workspace:FindFirstChild("Sounds")
+    if sounds then
+        local soundsDestroyed = 0
+        for _, sound in pairs(sounds:GetChildren()) do
+            if sound.Name == "Alarm" then
+                sound:Destroy()
+                soundsDestroyed += 1
+                print("Destroyed: workspace.Sounds.Alarm")
+            end
+        end
+        if soundsDestroyed == 0 then
+            print("Error: No Alarm sounds found in workspace.Sounds.")
+        else
+            print("Total Alarm sounds destroyed in workspace.Sounds:", soundsDestroyed)
+        end
+    else
+        print("Error: workspace.Sounds not found.")
+    end
+end,
+        ["Break Entity"] = function()
+    -- Function to disable The Intruder mechanic
+    print("Entity mechanic disabled.")
+
+    -- Destroying specified paths
+    local map = workspace:FindFirstChild("Map")
+    if map then
+        if map:FindFirstChild("Intruder") then
+            map.Intruder:Destroy()
+            print("Destroyed: workspace.Map.Intruder")
+        else
+            print("Error: workspace.Map.Intruder not found.")
+        end
+
+        if map:FindFirstChild("Intruder2") then
+            map.Intruder2:Destroy()
+            print("Destroyed: workspace.Map.Intruder2")
+        else
+            print("Error: workspace.Map.Intruder2 not found.")
+        end
+    else
+        print("Error: workspace.Map not found.")
+    end
+
+    local events = workspace:FindFirstChild("Events")
+    if events then
+        if events:FindFirstChild("IntruderWaitValue") then
+            events.IntruderWaitValue:Destroy()
+            print("Destroyed: workspace.Events.IntruderWaitValue")
+        else
+            print("Error: workspace.Events.IntruderWaitValue not found.")
+        end
+    else
+        print("Error: workspace.Events not found.")
+    end
+
+    local values = workspace:FindFirstChild("Values")
+    if values then
+        if values:FindFirstChild("intruderPos") then
+            values.intruderPos:Destroy()
+            print("Destroyed: workspace.Values.intruderPos")
+        else
+            print("Error: workspace.Values.intruderPos not found.")
+        end
+
+        if values:FindFirstChild("isIntruderInRoom") then
+            values.isIntruderInRoom:Destroy()
+            print("Destroyed: workspace.Values.isIntruderInRoom")
+        else
+            print("Error: workspace.Values.isIntruderInRoom not found.")
+        end
+    else
+        print("Error: workspace.Values not found.")
+    end
+end,
+        ["Bypass Power Outage"] = function()
+    -- Function to bypass the power outage mechanic
+    print("Power outage mechanic bypassed.")
+
+    -- Locking workspace.Events.isPowerDown to false
+    local events = workspace:FindFirstChild("Events")
+    if events then
+        if events:FindFirstChild("isPowerDown") then
+            local isPowerDown = events.isPowerDown
+            if isPowerDown:IsA("BoolValue") then
+                isPowerDown.Value = false
+                print("Locked: workspace.Events.isPowerDown set to false")
+                
+                -- Ensure it stays locked to false
+                isPowerDown.Changed:Connect(function()
+                    isPowerDown.Value = false
+                    print("Locked: workspace.Events.isPowerDown reset to false")
+                end)
+            else
+                print("Error: workspace.Events.isPowerDown is not a BoolValue.")
+            end
+        else
+            print("Error: workspace.Events.isPowerDown not found.")
+        end
+    else
+        print("Error: workspace.Events not found.")
+    end
+
+    -- Locking workspace.Values.Power to 100
+    local values = workspace:FindFirstChild("Values")
+    if values then
+        if values:FindFirstChild("Power") then
+            local power = values.Power
+            if power:IsA("NumberValue") then
+                power.Value = 100
+                print("Locked: workspace.Values.Power set to 100")
+                
+                -- Ensure it stays locked to 100
+                power.Changed:Connect(function()
+                    power.Value = 100
+                    print("Locked: workspace.Values.Power reset to 100")
+                end)
+            else
+                print("Error: workspace.Values.Power is not a NumberValue.")
+            end
+        else
+            print("Error: workspace.Values.Power not found.")
+        end
+
+        -- Destroying workspace.Values.PowerWait
+        if values:FindFirstChild("PowerWait") then
+            values.PowerWait:Destroy()
+            print("Destroyed: workspace.Values.PowerWait")
+        else
+            print("Error: workspace.Values.PowerWait not found.")
+        end
+    else
+        print("Error: workspace.Values not found.")
+    end
+
+    -- Destroying other map stuff
+    local map = workspace:FindFirstChild("Map")
+    if map then
+        if map:FindFirstChild("Breaker") then
+            map.Breaker:Destroy()
+            print("Destroyed: workspace.Map.Breaker")
+        else
+            print("Error: workspace.Map.Breaker not found.")
+        end
+
+        if map:FindFirstChild("FuseBox") then
+            map.FuseBox:Destroy()
+            print("Destroyed: workspace.Map.FuseBox")
+        else
+            print("Error: workspace.Map.FuseBox not found.")
+        end
+    else
+        print("Error: workspace.Map not found.")
+    end
+
+    -- Destroying CutPower in ReplicatedStorage
+    local replicatedStorage = game:GetService("ReplicatedStorage")
+    if replicatedStorage:FindFirstChild("CutPower") then
+        replicatedStorage.CutPower:Destroy()
+        print("Destroyed: ReplicatedStorage.CutPower")
+    else
+        print("Error: ReplicatedStorage.CutPower not found.")
+    end
+
+    -- Destroying workspace.Sounds.PowerDown
+    if workspace:FindFirstChild("Sounds") then
+        if workspace.Sounds:FindFirstChild("PowerDown") then
+            workspace.Sounds.PowerDown:Destroy()
+            print("Destroyed: workspace.Sounds.PowerDown")
+        else
+            print("Error: workspace.Sounds.PowerDown not found.")
+        end
+    else
+        print("Error: workspace.Sounds not found.")
+    end
+end,
+        ["Become The Intruder (WIP)"] = function()
+            print("You have become the intruder (WIP).")
+        end,
+        ["Destroy Phone"] = function()
+    -- Destroys the Phone in the Map
+    local map = workspace:FindFirstChild("Map")
+    if map then
+        local phone = map:FindFirstChild("Phone")
+        if phone then
+            phone:Destroy()
+            print("Destroyed: workspace.Map.Phone")
+        else
+            print("Error: workspace.Map.Phone not found.")
+        end
+    else
+        print("Error: workspace.Map not found.")
+    end
+end,
+
+["Delete Tutorial"] = function()
+    -- Destroys the Book (tutorial) in workspace
+    local book = workspace:FindFirstChild("Book")
+    if book then
+        book:Destroy()
+        print("Destroyed: workspace.Book")
+    else
+        print("Error: workspace.Book not found.")
+    end
+end,
+
+["Delete Lights"] = function()
+    -- Destroys the LightSwitch in Map
+    local map = workspace:FindFirstChild("Map")
+    if map then
+        local lightSwitch = map:FindFirstChild("LightSwitch")
+        if lightSwitch then
+            lightSwitch:Destroy()
+            print("Destroyed: workspace.Map.LightSwitch")
+        else
+            print("Error: workspace.Map.LightSwitch not found.")
+        end
+    else
+        print("Error: workspace.Map not found.")
+    end
+end,
+
+["Delete Cameras"] = function()
+    -- Destroys the TurnOnCamera in Map
+    local map = workspace:FindFirstChild("Map")
+    if map then
+        local turnOnCamera = map:FindFirstChild("TurnOnCamera")
+        if turnOnCamera then
+            turnOnCamera:Destroy()
+            print("Destroyed: workspace.Map.TurnOnCamera")
+        else
+            print("Error: workspace.Map.TurnOnCamera not found.")
+        end
+    else
+        print("Error: workspace.Map not found.")
+    end
+end,
+   ["Make Nightmare Mode"] = function()
+    -- Check for workspace.Values
+    local values = workspace:FindFirstChild("Values")
+    if values then
+        -- Set Easy Mode to false
+        if values:FindFirstChild("isEasyMode") then
+            local isEasyMode = values.isEasyMode
+            if isEasyMode:IsA("BoolValue") then
+                isEasyMode.Value = false
+                print("Easy Mode set to false.")
+            else
+                print("Error: workspace.Values.isEasyMode is not a BoolValue.")
+            end
+        else
+            print("Error: workspace.Values.isEasyMode not found.")
+        end
+
+        -- Set Nightmare Mode to true
+        if values:FindFirstChild("isNightmareMode") then
+            local isNightmareMode = values.isNightmareMode
+            if isNightmareMode:IsA("BoolValue") then
+                isNightmareMode.Value = true
+                print("Nightmare Mode set to true.")
+            else
+                print("Error: workspace.Values.isNightmareMode is not a BoolValue.")
+            end
+        else
+            print("Error: workspace.Values.isNightmareMode not found.")
+        end
+    else
+        print("Error: workspace.Values not found.")
+    end
+end,
+ ["Delete Lockers"] = function()
+    -- Check if workspace.Lockers exists
+    local lockers = workspace:FindFirstChild("Lockers")
+    if lockers then
+        lockers:Destroy()
+        print("Destroyed: workspace.Lockers")
+    else
+        print("Error: workspace.Lockers not found.")
+    end
+end
+    }
+
+    -- Create button stuff
+    local yOffset = 180 -- Adjusted to accommodate larger frame
+    for name, func in pairs(buttonFunctions) do
+        createButton(name, UDim2.new(0.1, 0, 0, yOffset), mainFrame, func) -- Adjusted button position
+        yOffset = yOffset + 40 -- Reduced spacing for smaller buttons
+    end
+end)
+
+-- Update The Intruder's location here
+local intruderPos = workspace:FindFirstChild("Values"):FindFirstChild("intruderPos")
+if intruderPos then
+    intruderPos:GetPropertyChangedSignal("Value"):Connect(function()
+        locationLabel.Text = "Location: " .. tostring(intruderPos.Value)
+    end)
+end
