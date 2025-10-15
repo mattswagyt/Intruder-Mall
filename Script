@@ -232,8 +232,20 @@ createButton("Intruder Ignores You", function()
         print("BoxOfShame destroyed!")
     end
 
-    -- Keep FindPlayer paths and TouchInterest intact
-    -- No destruction here to prevent bugs with intruder entering rooms
+    -- Destroy FindPlayer paths to ensure the intruder ignores the player
+    local events = workspace:FindFirstChild("Events")
+    if events then
+        local findPlayerPaths = { "FindPlayer", "FindPlayer2", "FindPlayer3" }
+        for _, pathName in ipairs(findPlayerPaths) do
+            local obj = events:FindFirstChild(pathName)
+            if obj and obj:FindFirstChild("TouchInterest") then
+                obj.TouchInterest:Destroy()
+                print(pathName .. " TouchInterest destroyed.")
+            end
+        end
+    else
+        warn("Error: workspace.Events not found.")
+    end
 end)
 
 createButton("Break Anxiety", function()
