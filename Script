@@ -102,7 +102,7 @@ spawn(function()
             LocationLabel.Text = "Location: " .. tostring(result)
 
             -- Trigger hallway warning if detected
-            if tostring(result):lower():find("hallway2") then
+            if tostring(result):lower():find("hallway3") then
                 notifyWarning()
             end
         else
@@ -232,20 +232,8 @@ createButton("Intruder Ignores You", function()
         print("BoxOfShame destroyed!")
     end
 
-    -- Destroy FindPlayer paths to ensure the intruder ignores the player
-    local events = workspace:FindFirstChild("Events")
-    if events then
-        local findPlayerPaths = { "FindPlayer", "FindPlayer2", "FindPlayer3" }
-        for _, pathName in ipairs(findPlayerPaths) do
-            local obj = events:FindFirstChild(pathName)
-            if obj and obj:FindFirstChild("TouchInterest") then
-                obj.TouchInterest:Destroy()
-                print(pathName .. " TouchInterest destroyed.")
-            end
-        end
-    else
-        warn("Error: workspace.Events not found.")
-    end
+    -- Keep FindPlayer paths and TouchInterest intact
+    -- No destruction here to prevent bugs with intruder entering rooms
 end)
 
 createButton("Break Anxiety", function()
@@ -377,9 +365,9 @@ createButton("Break Time", function()
 end)
 
 createButton("Break Alarm", function()
- -- Function to disable the alarm mechanic
+    -- Function to disable the alarm mechanic
     print("Alarm mechanic disabled.")
-    
+
     -- Destroying paths in workspace.Values
     local values = workspace:FindFirstChild("Values")
     if values then
@@ -428,22 +416,22 @@ createButton("Break Alarm", function()
         print("Error: workspace.Map not found.")
     end
 
-    -- Destroying every sound named "Alarm" in workspace.Sounds
+    -- Destroying all Alarm and Intruder alert sounds in workspace.Sounds
     local sounds = workspace:FindFirstChild("Sounds")
     if sounds then
         local soundsDestroyed = 0
-        for _, sound in pairs(sounds:GetChildren()) do
-            if sound.Name == "Alarm" then
-                sound:Destroy()
+        local soundNames = {"Alarm", "IntruderAlert1", "IntruderAlert2"} -- Added Intruder alerts
+        for _, soundName in ipairs(soundNames) do
+            local soundObj = sounds:FindFirstChild(soundName)
+            if soundObj then
+                soundObj:Destroy()
                 soundsDestroyed += 1
-                print("Destroyed: workspace.Sounds.Alarm")
+                print("Destroyed: workspace.Sounds." .. soundName)
+            else
+                print("Error: workspace.Sounds." .. soundName .. " not found.")
             end
         end
-        if soundsDestroyed == 0 then
-            print("Error: No Alarm sounds found in workspace.Sounds.")
-        else
-            print("Total Alarm sounds destroyed in workspace.Sounds:", soundsDestroyed)
-        end
+        print("Total sounds destroyed in workspace.Sounds:", soundsDestroyed)
     else
         print("Error: workspace.Sounds not found.")
     end
